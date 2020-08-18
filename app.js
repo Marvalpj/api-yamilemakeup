@@ -29,18 +29,7 @@ app.use((req, res, next) => {
 
 //rutas
 app.use('/api',product_routes)
-// app.use('/api', (req , res)=>{
-//   return res.status(200).send({
-//     title : "Juego de Brochas Salam",
-//     code : "BLACK - Musu Cosmetic -3305/052",
-//     descriptions : [ 
-//         "Salam es el saludo isl&aacute;mico y significa paz.", 
-//         "Las brochas del maquillador son el primer contacto que tiene el cliente con el maquillaje. Son el primer encuentro. Y esto explica por qu&eacute; son tan importantes", 
-//         "El set de brochas \"Salam\" cuenta con 25 piezas indispensables tanto pra quien apenas comienza a dar sus primeros pasos como para los m&aacute;s experimentados."
-//     ],
-//     image : "images/Salambrushset.png"
-//   })
-// })
+
 
 
 module.exports = app

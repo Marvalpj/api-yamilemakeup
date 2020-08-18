@@ -2,6 +2,12 @@
 
 var Product = require('../models/product')
 
+//fs(fileSystem)- API para interactuar con el sistema de archivos 
+const fs = require('fs')
+
+const path = require('path')
+const { exists } = require('../models/product')
+
 
 
 var controller = {
@@ -96,6 +102,85 @@ var controller = {
                 product:productRemove
             }) 
 
+        })
+
+
+    }
+
+    ,
+
+    uploadImage : function( req , res){
+
+        var productID = req.params.id
+        var fileName
+
+        if( req.files){
+            //ruta de la imagen subida
+            var filePath = req.files.image.path
+            var fileSplit = filePath.split('\\')
+
+            //nombre de la imagen
+            fileName = fileSplit[2]
+           
+            var extSplit =fileName.split('.')
+            var fileExt = extSplit[1].toLowerCase()
+            
+            
+            if( fileExt == 'png' || fileExt == 'png' || fileExt == 'jpg' ){
+                
+                Product.findByIdAndUpdate( productID , {image : fileName} , {new : true} , (err , productUpdate)=>{
+
+                    if(err){
+
+                        fs.unlink(filePath , (err)=>{
+                            return res.status(500).send({message:'la imagen no pudo ser subida'})
+                        })
+
+                    } 
+
+                    if(!productUpdate){
+                        fs.unlink(filePath , (err)=>{
+                            return res.status(404).send({message:'problemas al subir la imagem'})
+                        })
+                    }
+                    
+                    if(productUpdate) return res.status(200).send({
+                        product : productUpdate
+                    })
+
+                })
+
+            }else{
+                fs.unlink(filePath , (err)=>{
+                    return res.status(200).send({
+                        message: 'la extension no es valida'
+                    })
+                })
+            }
+
+        }else{
+            return res.status(200).send({
+                message : 'no ha subido una imagen'
+            })
+        }
+    },
+
+    getImage : function( req, res ){
+        
+        //name of file
+        var file = req.params.image
+        //route of file
+        var path_file = './uploads/products/'+file
+
+
+        fs.exists( path_file , (exists)=>{
+            if(exists){
+                return res.sendFile(path.resolve(path_file))
+            }else{
+                return res.status(200).send({
+                    message:'la imagen no existe'
+                })
+            }
         })
 
 
