@@ -6,7 +6,6 @@ var Product = require('../models/product')
 const fs = require('fs')
 
 const path = require('path')
-const { exists } = require('../models/product')
 
 
 
@@ -45,7 +44,7 @@ var controller = {
 
             if(err) return res.status(500).send({message:'error al devolver los datos'})
 
-            if(!project) return res.status(404).send({message:'el producto no existe'})
+            if(!product) return res.status(404).send({message:'el producto no existe'})
 
             return res.status(200).send({
                 product : product
@@ -62,8 +61,8 @@ var controller = {
             if(err) return res.status(500).send({message:'error al devolver datos'})
 
             if(!products) return res.status(404).send({message:'no hay productos para mostrar'})
-            
-            return res.status(200).send({products})
+
+            return res.status(200).send({products : products})
 
         })
 
@@ -126,7 +125,7 @@ var controller = {
             var fileExt = extSplit[1].toLowerCase()
             
             
-            if( fileExt == 'png' || fileExt == 'png' || fileExt == 'jpg' ){
+            if( fileExt == 'png' || fileExt == 'jpg' ){
                 
                 Product.findByIdAndUpdate( productID , {image : fileName} , {new : true} , (err , productUpdate)=>{
 
@@ -172,7 +171,6 @@ var controller = {
         //route of file
         var path_file = './uploads/products/'+file
 
-
         fs.exists( path_file , (exists)=>{
             if(exists){
                 return res.sendFile(path.resolve(path_file))
@@ -183,10 +181,7 @@ var controller = {
             }
         })
 
-
     }
-
-
 
 }
 
